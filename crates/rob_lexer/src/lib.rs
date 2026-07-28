@@ -67,12 +67,18 @@ mod tests {
 
     #[test]
     fn tokenizes_arithmetic() {
-        assert_eq!(tokenize("1+2").unwrap(), vec![Token::Int(1), Token::Plus, Token::Int(2)]);
+        assert_eq!(
+            tokenize("1+2").unwrap(),
+            vec![Token::Int(1), Token::Plus, Token::Int(2)]
+        );
     }
 
     #[test]
     fn tokenizes_identifier_with_underscores() {
-        assert_eq!(tokenize("foo_bar").unwrap(), vec![Token::Ident("foo_bar".to_string())]);
+        assert_eq!(
+            tokenize("foo_bar").unwrap(),
+            vec![Token::Ident("foo_bar".to_string())]
+        );
     }
 
     #[test]

@@ -4,7 +4,7 @@
 //! binary operators, and parentheses. Produces a [`rob_ast::Expr`].
 
 use rob_ast::{BinOp, Expr, Literal};
-use rob_lexer::{Token, tokenize};
+use rob_lexer::{tokenize, Token};
 
 /// An error produced while parsing.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -72,7 +72,11 @@ impl<'a> Parser<'a> {
             }
             self.bump();
             let right = self.expr(bp + 1)?;
-            left = Expr::Binary { op, left: Box::new(left), right: Box::new(right) };
+            left = Expr::Binary {
+                op,
+                left: Box::new(left),
+                right: Box::new(right),
+            };
         }
         Ok(left)
     }
