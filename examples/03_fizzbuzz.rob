@@ -1,0 +1,19 @@
+// 03 - FizzBuzz.
+// Features: for loop, ranges, match with guards, modulo, tuples.
+
+package examples;
+
+public fun classify(n: Int): String {
+    return match ((n % 3, n % 5)) {
+        (0, 0) -> "FizzBuzz",
+        (0, _) -> "Fizz",
+        (_, 0) -> "Buzz",
+        _      -> n.toString()
+    };
+}
+
+public fun main(): Unit {
+    for (n: Int in 1..101) {
+        println(classify(n));
+    }
+}

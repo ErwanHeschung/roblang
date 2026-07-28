@@ -1,0 +1,26 @@
+// 14 - Word frequency count.
+// Features: Map<String, Int>, Option-returning get with default, iteration over
+//           entries, mut, higher-order sort.
+
+package examples;
+
+public fun wordCount(text: String): Map<String, Int> {
+    mut counts: Map<String, Int> = Map.empty();
+    for (word: String in text.split(" ")) {
+        key: String = word.trim().toLowerCase();
+        if (key.length() == 0) { continue; }
+        current: Int = counts.get(key) ?: 0;   // absent -> 0
+        counts.put(key, current + 1);
+    }
+    return counts;
+}
+
+public fun main(): Unit {
+    text: String = "the quick brown fox the lazy dog the fox";
+    counts: Map<String, Int> = wordCount(text);
+    entries: List<(String, Int)> = counts.entries()
+        .sortedBy((e: (String, Int)) -> -e.1);   // most frequent first
+    for (e: (String, Int) in entries) {
+        println("${e.0}: ${e.1}");
+    }
+}

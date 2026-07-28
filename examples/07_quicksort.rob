@@ -1,0 +1,33 @@
+// 07 - Quicksort over any comparable type.
+// Features: generics with an interface bound, the This self-type, recursion,
+//           List operations, higher-order predicate via lambda.
+
+package examples;
+
+public interface Comparable {
+    // returns < 0, 0, or > 0
+    fun compareTo(other: This): Int;
+}
+
+public fun quicksort<T: Comparable>(items: List<T>): List<T> {
+    if (items.size() <= 1) { return items; }
+    pivot: T = items.get(0);
+    rest: List<T> = items.drop(1);
+    less: List<T>    = rest.filter((x: T) -> x.compareTo(pivot) < 0);
+    greater: List<T> = rest.filter((x: T) -> x.compareTo(pivot) >= 0);
+    return quicksort(less).append(pivot).appendAll(quicksort(greater));
+}
+
+public data class Age(years: Int) : Copy, Comparable {
+    public fun compareTo(other: Age): Int {
+        return years - other.years;
+    }
+}
+
+public fun main(): Unit {
+    ages: List<Age> = List.of(Age(30), Age(9), Age(21), Age(9), Age(55));
+    sorted: List<Age> = quicksort(ages);
+    for (a: Age in sorted) {
+        println("${a.years}");
+    }
+}

@@ -1,0 +1,39 @@
+// 02 - Fibonacci, three ways.
+// Features: recursion, iteration with mut, memoization with a Map, ranges.
+
+package examples;
+
+// Naive recursive.
+public fun fibRec(n: Int): Long {
+    if (n < 2) { return n.toLong(); }
+    return fibRec(n - 1) + fibRec(n - 2);
+}
+
+// Iterative.
+public fun fibIter(n: Int): Long {
+    mut a: Long = 0;
+    mut b: Long = 1;
+    for (i: Int in 0..n) {
+        next: Long = a + b;
+        a = b;
+        b = next;
+    }
+    return a;
+}
+
+// Memoized.
+public fun fibMemo(n: Int, cache: mut Map<Int, Long>): Long {
+    if (n < 2) { return n.toLong(); }
+    hit: Long? = cache.get(n);
+    if (hit != null) { return hit; }
+    value: Long = fibMemo(n - 1, cache) + fibMemo(n - 2, cache);
+    cache.put(n, value);
+    return value;
+}
+
+public fun main(): Unit {
+    println("fibRec(10)  = ${fibRec(10)}");
+    println("fibIter(50) = ${fibIter(50)}");
+    mut cache: Map<Int, Long> = Map.empty();
+    println("fibMemo(50) = ${fibMemo(50, cache)}");
+}

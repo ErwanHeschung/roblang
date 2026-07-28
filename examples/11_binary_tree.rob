@@ -1,0 +1,36 @@
+// 11 - Binary tree with a weak parent back-reference.
+// Features: shared owning edges, weak non-owning edge to break cycles,
+//           recursion, Option children.
+
+package examples;
+
+public class TreeNode(value: Int) {
+    public mut left: shared TreeNode? = null;
+    public mut right: shared TreeNode? = null;
+    public mut parent: weak TreeNode? = null;   // non-owning: no refcount cycle
+
+    public fun attachLeft(child: shared TreeNode): Unit {
+        child.parent = weak(this);
+        left = child;
+    }
+
+    public fun attachRight(child: shared TreeNode): Unit {
+        child.parent = weak(this);
+        right = child;
+    }
+}
+
+// In-order sum.
+public fun sumInOrder(node: shared TreeNode?): Int {
+    match (node) {
+        None    -> return 0,
+        Some(n) -> return sumInOrder(n.left) + n.value + sumInOrder(n.right)
+    };
+}
+
+public fun main(): Unit {
+    root: shared TreeNode = shared TreeNode(2);
+    root.attachLeft(shared TreeNode(1));
+    root.attachRight(shared TreeNode(3));
+    println("sum = ${sumInOrder(root)}");
+}

@@ -1,0 +1,47 @@
+// 09 - Generic container: a stack.
+// Features: generic class, mut field, typed throws on underflow, Option peek,
+//           monomorphization (Stack<Int> and Stack<String> are separate types).
+
+package examples;
+
+public class EmptyStack() : Error {
+    public fun message(): String { return "pop from empty stack"; }
+}
+
+public class Stack<T>() {
+    private mut items: List<T> = List.empty();
+
+    public fun push(item: T): Unit {
+        items.add(item);
+    }
+
+    public fun pop(): T throws EmptyStack {
+        if (items.isEmpty()) { throw EmptyStack(); }
+        top: T = items.get(items.size() - 1);
+        items.removeLast();
+        return top;
+    }
+
+    public fun peek(): T? {
+        if (items.isEmpty()) { return null; }
+        return items.get(items.size() - 1);
+    }
+
+    public fun size(): Int {
+        return items.size();
+    }
+}
+
+public fun main(): Unit {
+    stack: Stack<Int> = Stack();
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    println("size = ${stack.size()}");
+    try {
+        println("pop  = ${try stack.pop()}");
+        println("peek = ${stack.peek() ?: -1}");
+    } catch (e: EmptyStack) {
+        println(e.message());
+    }
+}

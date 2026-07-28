@@ -1,0 +1,40 @@
+// 13 - CSV parsing into typed records.
+// Features: string splitting, typed throws with a custom Error, data class,
+//           per-line error reporting, Option lookup.
+
+package examples;
+
+public class CsvError(line: Int, reason: String) : Error {
+    public fun message(): String {
+        return "line ${line}: ${reason}";
+    }
+}
+
+public data class Person(name: String, age: Int);
+
+public fun parsePerson(line: String, lineNo: Int): Person throws CsvError {
+    fields: List<String> = line.split(",");
+    if (fields.size() != 2) {
+        throw CsvError(lineNo, "expected 2 fields, got ${fields.size()}");
+    }
+    name: String = fields.get(0).trim();
+    ageText: String = fields.get(1).trim();
+    if (!ageText.isNumeric()) {
+        throw CsvError(lineNo, "age is not a number: ${ageText}");
+    }
+    return Person(name, ageText.toInt());
+}
+
+public fun main(): Unit {
+    lines: List<String> = List.of("Ada, 36", "Grace, 45", "Bad, xx");
+    mut lineNo: Int = 0;
+    for (line: String in lines) {
+        lineNo += 1;
+        try {
+            person: Person = try parsePerson(line, lineNo);
+            println("${person.name} is ${person.age}");
+        } catch (e: CsvError) {
+            println("skipped ${e.message()}");
+        }
+    }
+}
