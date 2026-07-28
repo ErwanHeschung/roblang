@@ -1,0 +1,9 @@
+// 01 - Hello world.
+// Features: package, free function entry point, string interpolation, println.
+
+package examples;
+
+public fun main(): Unit {
+    name: String = "world";
+    println("hello, ${name}!");
+}

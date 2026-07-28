@@ -1,0 +1,44 @@
+// 16 - Expression calculator (a tiny AST interpreter).
+// Features: recursive enum AST, match with variant destructuring, typed throws
+//           on divide-by-zero, recursion.
+
+package examples;
+
+public class DivByZero() : Error {
+    public fun message(): String { return "division by zero"; }
+}
+
+public enum Expr {
+    Lit(value: Double),
+    Add(left: shared Expr, right: shared Expr),
+    Sub(left: shared Expr, right: shared Expr),
+    Mul(left: shared Expr, right: shared Expr),
+    Div(left: shared Expr, right: shared Expr);
+
+    public fun eval(): Double throws DivByZero {
+        return match (this) {
+            Lit(value)      -> value,
+            Add(left, right) -> try left.eval() + try right.eval(),
+            Sub(left, right) -> try left.eval() - try right.eval(),
+            Mul(left, right) -> try left.eval() * try right.eval(),
+            Div(left, right) -> {
+                divisor: Double = try right.eval();
+                if (divisor == 0.0) { throw DivByZero(); }
+                try left.eval() / divisor;
+            }
+        };
+    }
+}
+
+public fun main(): Unit {
+    // (1 + 2) * (9 / 3)
+    expr: shared Expr = shared Expr.Mul(
+        shared Expr.Add(shared Expr.Lit(1.0), shared Expr.Lit(2.0)),
+        shared Expr.Div(shared Expr.Lit(9.0), shared Expr.Lit(3.0))
+    );
+    try {
+        println("result = ${try expr.eval()}");
+    } catch (e: DivByZero) {
+        println(e.message());
+    }
+}

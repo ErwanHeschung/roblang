@@ -1,0 +1,37 @@
+// 18 - Optionality: existence vs emptiness.
+// Features: T? = Option<T>, safe call ?., elvis ?:, non-null assert !!,
+//           nesting (Some(None)) to distinguish "absent" from "present but empty".
+
+package examples;
+
+public data class User(name: String, nickname: String?);
+
+// A directory that may not contain a key at all (outer Option), and a present
+// entry may itself carry no nickname (inner Option).
+public fun lookupNickname(directory: Map<String, User>, key: String): String?? {
+    user: User? = directory.get(key);
+    return match (user) {
+        None       -> null,             // no such user (outer None)
+        Some(u)    -> Some(u.nickname)  // user exists; nickname may still be None
+    };
+}
+
+public fun main(): Unit {
+    mut directory: Map<String, User> = Map.empty();
+    directory.put("ada", User("Ada", "Countess"));
+    directory.put("grace", User("Grace", null));
+
+    for (key: String in List.of("ada", "grace", "alan")) {
+        report: String = match (lookupNickname(directory, key)) {
+            None             -> "no such user",
+            Some(None)       -> "user exists, no nickname",
+            Some(Some(name)) -> "nickname: ${name}"
+        };
+        println("${key}: ${report}");
+    }
+
+    // safe-call chain and elvis on a plain nullable
+    maybeUser: User? = directory.get("ada");
+    label: String = maybeUser?.name ?: "unknown";
+    println("label = ${label}");
+}

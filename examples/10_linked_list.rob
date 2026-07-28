@@ -1,0 +1,44 @@
+// 10 - Singly linked list.
+// Features: generic recursive data via shared, Option for the tail, recursion,
+//           move semantics for the pushed value.
+
+package examples;
+
+public class Node<T>(value: T) {
+    public mut next: shared Node<T>? = null;
+}
+
+public class LinkedList<T>() {
+    private mut head: shared Node<T>? = null;
+    private mut length: Int = 0;
+
+    public fun pushFront(value: T): Unit {
+        node: shared Node<T> = shared Node(value);
+        node.next = head;       // shares the old head (refcount + 1)
+        head = node;
+        length += 1;
+    }
+
+    public fun size(): Int {
+        return length;
+    }
+
+    public fun sumWith(fold: (T, T) -> T, zero: T): T {
+        mut acc: T = zero;
+        mut cursor: shared Node<T>? = head;
+        while (cursor != null) {
+            acc = fold(acc, cursor.value);
+            cursor = cursor.next;
+        }
+        return acc;
+    }
+}
+
+public fun main(): Unit {
+    list: LinkedList<Int> = LinkedList();
+    for (i: Int in 1..6) {
+        list.pushFront(i);
+    }
+    total: Int = list.sumWith((a: Int, b: Int) -> a + b, 0);
+    println("size = ${list.size()}, sum = ${total}");
+}

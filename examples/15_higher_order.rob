@@ -1,0 +1,33 @@
+// 15 - Higher-order functions and function types.
+// Features: function-typed parameters and returns, lambdas (expression and block
+//           bodied), map/filter/reduce, closures capturing by move.
+
+package examples;
+
+public fun compose<A, B, C>(f: (B) -> C, g: (A) -> B): (A) -> C {
+    return (x: A) -> f(g(x));
+}
+
+public fun repeat<T>(times: Int, seed: T, step: (T) -> T): T {
+    mut acc: T = seed;
+    for (i: Int in 0..times) {
+        acc = step(acc);
+    }
+    return acc;
+}
+
+public fun main(): Unit {
+    numbers: List<Int> = List.of(1, 2, 3, 4, 5, 6);
+
+    doubled: List<Int> = numbers.map((n: Int) -> n * 2);
+    evens: List<Int>   = numbers.filter((n: Int) -> n % 2 == 0);
+    total: Int         = numbers.reduce(0, (a: Int, b: Int) -> a + b);
+
+    println("doubled sum = ${doubled.sum()}");
+    println("even count  = ${evens.size()}");
+    println("total       = ${total}");
+
+    incThenSquare: (Int) -> Int = compose((x: Int) -> x * x, (x: Int) -> x + 1);
+    println("compose(3)  = ${incThenSquare(3)}");   // (3+1)^2 = 16
+    println("pow2(10)    = ${repeat(10, 1, (x: Int) -> x * 2)}");
+}

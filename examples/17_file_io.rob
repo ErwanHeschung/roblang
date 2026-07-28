@@ -1,0 +1,32 @@
+// 17 - File I/O with deterministic cleanup.
+// Features: RAII (File closed on scope exit), typed throws for I/O, reading and
+//           writing lines, iteration.
+
+package examples;
+
+public fun writeLines(path: String, lines: List<String>): Unit throws IoError {
+    file: File = try File.create(path);   // handle released at scope end (RAII)
+    for (line: String in lines) {
+        try file.writeLine(line);
+    }
+    // no explicit close: 'file' is dropped here, flushing and closing.
+}
+
+public fun countLines(path: String): Int throws IoError {
+    file: File = try File.open(path);
+    mut count: Int = 0;
+    for (line: String in file.lines()) {
+        count += 1;
+    }
+    return count;
+}
+
+public fun main(): Unit {
+    path: String = "notes.txt";
+    try {
+        try writeLines(path, List.of("first", "second", "third"));
+        println("wrote ${try countLines(path)} lines to ${path}");
+    } catch (e: IoError) {
+        println("io failed: ${e.message()}");
+    }
+}

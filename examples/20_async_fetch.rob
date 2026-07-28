@@ -1,0 +1,37 @@
+// 20 - Structured concurrency with async/await.
+// Features: async fun, await, spawning tasks, moving owned values into tasks,
+//           collecting results, typed throws surfacing at await.
+
+package examples;
+
+public class FetchError(url: String) : Error {
+    public fun message(): String { return "failed to fetch ${url}"; }
+}
+
+public async fun fetchLength(url: String): Int throws FetchError {
+    body: String = try await Http.get(url);   // error surfaces here at await
+    return body.length();
+}
+
+// Fetch many URLs concurrently and sum their lengths.
+public async fun totalBytes(urls: List<String>): Int throws FetchError {
+    tasks: List<Task<Int>> = urls.map((u: String) -> spawn(() -> fetchLength(u)));
+    mut total: Int = 0;
+    for (task: Task<Int> in tasks) {
+        total += try await task;
+    }
+    return total;
+}
+
+public async fun main(): Unit {
+    urls: List<String> = List.of(
+        "https://example.com/a",
+        "https://example.com/b"
+    );
+    try {
+        total: Int = try await totalBytes(urls);
+        println("total bytes = ${total}");
+    } catch (e: FetchError) {
+        println(e.message());
+    }
+}

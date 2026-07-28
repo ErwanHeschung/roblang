@@ -1,0 +1,40 @@
+// 05 - Bank account (classic OOP).
+// Features: class with private mut field, visibility, methods, typed throws,
+//           custom Error type, invariant enforcement.
+
+package examples;
+
+public class InsufficientFunds(requested: Long, available: Long) : Error {
+    public fun message(): String {
+        return "cannot withdraw ${requested}: only ${available} available";
+    }
+}
+
+public class BankAccount(owner: String) {
+    private mut balance: Long = 0;
+
+    public fun deposit(amount: Long): Unit {
+        balance += amount;
+    }
+
+    public fun withdraw(amount: Long): Unit throws InsufficientFunds {
+        if (amount > balance) { throw InsufficientFunds(amount, balance); }
+        balance -= amount;
+    }
+
+    public fun currentBalance(): Long {
+        return balance;
+    }
+}
+
+public fun main(): Unit {
+    account: BankAccount = BankAccount("Ada");
+    account.deposit(100);
+    try {
+        try account.withdraw(30);
+        try account.withdraw(1000);   // throws
+    } catch (e: InsufficientFunds) {
+        println(e.message());
+    }
+    println("balance = ${account.currentBalance()}");
+}

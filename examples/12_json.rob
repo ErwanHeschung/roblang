@@ -1,0 +1,36 @@
+// 12 - JSON value model and serializer.
+// Features: recursive enum sum type, match, generics (List/Map), string building,
+//           tuples for object entries.
+
+package examples;
+
+public enum Json {
+    Null,
+    Bool(value: Bool),
+    Number(value: Double),
+    Text(value: String),
+    Array(items: List<Json>),
+    Object(entries: List<(String, Json)>);
+
+    public fun render(): String {
+        return match (this) {
+            Null          -> "null",
+            Bool(value)   -> if (value) { "true" } else { "false" },
+            Number(value) -> value.toString(),
+            Text(value)   -> "\"${value}\"",
+            Array(items)  -> "[" + items.map((j: Json) -> j.render()).join(",") + "]",
+            Object(entries) -> "{" + entries.map((e: (String, Json)) ->
+                                   "\"${e.0}\":${e.1.render()}").join(",") + "}"
+        };
+    }
+}
+
+public fun main(): Unit {
+    doc: Json = Json.Object(List.of(
+        ("name", Json.Text("Ada")),
+        ("age", Json.Number(36.0)),
+        ("active", Json.Bool(true)),
+        ("tags", Json.Array(List.of(Json.Text("a"), Json.Text("b"))))
+    ));
+    println(doc.render());
+}

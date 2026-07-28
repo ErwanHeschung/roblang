@@ -1,0 +1,25 @@
+// 04 - Temperature conversion.
+// Features: data class, Copy (trivial value), arithmetic, tuple return, destructuring.
+
+package examples;
+
+public data class Celsius(degrees: Double) : Copy;
+public data class Fahrenheit(degrees: Double) : Copy;
+
+public fun toFahrenheit(c: Celsius): Fahrenheit {
+    return Fahrenheit(c.degrees * 9.0 / 5.0 + 32.0);
+}
+
+public fun toCelsius(f: Fahrenheit): Celsius {
+    return Celsius((f.degrees - 32.0) * 5.0 / 9.0);
+}
+
+public fun main(): Unit {
+    c: Celsius = Celsius(100.0);
+    f: Fahrenheit = toFahrenheit(c);
+    // 'c' is still valid after the call: Celsius is Copy.
+    println("${c.degrees}C = ${f.degrees}F");
+
+    Celsius(back) = toCelsius(Fahrenheit(98.6));  // destructuring a data class
+    println("98.6F = ${back}C");
+}

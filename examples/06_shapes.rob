@@ -1,0 +1,40 @@
+// 06 - Shapes: polymorphism via interface + sum type.
+// Features: interface with default method, enum with field variants, match,
+//           the This self-type, static dispatch.
+
+package examples;
+
+public interface Drawable {
+    fun area(): Double;
+    // default method uses the interface's own abstract member
+    public fun describe(): String {
+        return "shape with area ${area()}";
+    }
+}
+
+public enum Shape : Drawable {
+    Circle(radius: Double),
+    Rect(width: Double, height: Double),
+    Triangle(base: Double, height: Double);
+
+    public fun area(): Double {
+        return match (this) {
+            Circle(radius)      -> 3.14159265 * radius * radius,
+            Rect(w, h)          -> w * h,
+            Triangle(base, h)   -> 0.5 * base * h
+        };
+    }
+}
+
+public fun main(): Unit {
+    shapes: List<Shape> = List.of(
+        Shape.Circle(2.0),
+        Shape.Rect(3.0, 4.0),
+        Shape.Triangle(6.0, 2.0)
+    );
+    for (s: Shape in shapes) {
+        println(s.describe());
+    }
+    total: Double = shapes.map((s: Shape) -> s.area()).sum();
+    println("total area = ${total}");
+}
