@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = ["crates/rob_ast", "crates/rob_lexer", "crates/rob_parser"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ErwanHeschung/roblang"
+
+[workspace.dependencies]
+logos = "0.14"
+insta = "1"

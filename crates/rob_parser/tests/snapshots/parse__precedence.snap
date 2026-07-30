@@ -1,0 +1,5 @@
+---
+source: crates/rob_parser/tests/parse.rs
+expression: parse_to_sexpr("1 + 2 * 3 - 4").unwrap()
+---
+(- (+ 1 (* 2 3)) 4)
