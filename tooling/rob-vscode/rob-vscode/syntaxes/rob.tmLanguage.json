@@ -1,0 +1,197 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Rob",
+  "scopeName": "source.rob",
+  "fileTypes": ["rob"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#characters" },
+    { "include": "#numbers" },
+    { "include": "#constants" },
+    { "include": "#keywords-control" },
+    { "include": "#storage-modifiers" },
+    { "include": "#package-import" },
+    { "include": "#class-definition" },
+    { "include": "#function-definition" },
+    { "include": "#keywords-other" },
+    { "include": "#types" },
+    { "include": "#function-calls" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.rob",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.rob",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "patterns": [ { "include": "#comments" } ]
+        }
+      ]
+    },
+
+    "strings": {
+      "name": "string.quoted.double.rob",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        { "include": "#string-escapes" },
+        { "include": "#string-interpolation" }
+      ]
+    },
+
+    "string-escapes": {
+      "name": "constant.character.escape.rob",
+      "match": "\\\\(n|t|r|\\\\|\"|'|0|\\$|u\\{[0-9a-fA-F]+\\})"
+    },
+
+    "string-interpolation": {
+      "patterns": [
+        {
+          "name": "meta.embedded.line.rob",
+          "begin": "\\$\\{",
+          "beginCaptures": { "0": { "name": "punctuation.section.embedded.begin.rob" } },
+          "end": "\\}",
+          "endCaptures": { "0": { "name": "punctuation.section.embedded.end.rob" } },
+          "patterns": [ { "include": "$self" } ]
+        },
+        {
+          "match": "(\\$)([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "punctuation.definition.variable.rob" },
+            "2": { "name": "variable.other.interpolated.rob" }
+          }
+        }
+      ]
+    },
+
+    "characters": {
+      "name": "string.quoted.single.rob",
+      "match": "'(\\\\(n|t|r|\\\\|\"|'|0|\\$|u\\{[0-9a-fA-F]+\\})|[^'\\\\])'"
+    },
+
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.rob",
+          "match": "\\b[0-9][0-9_]*\\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?\\b"
+        },
+        {
+          "name": "constant.numeric.float.rob",
+          "match": "\\b[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*\\b"
+        },
+        {
+          "name": "constant.numeric.hex.rob",
+          "match": "\\b0x[0-9a-fA-F][0-9a-fA-F_]*\\b"
+        },
+        {
+          "name": "constant.numeric.octal.rob",
+          "match": "\\b0o[0-7][0-7_]*\\b"
+        },
+        {
+          "name": "constant.numeric.binary.rob",
+          "match": "\\b0b[01][01_]*\\b"
+        },
+        {
+          "name": "constant.numeric.decimal.rob",
+          "match": "\\b[0-9][0-9_]*\\b"
+        }
+      ]
+    },
+
+    "constants": {
+      "patterns": [
+        { "name": "constant.language.boolean.rob", "match": "\\b(true|false)\\b" },
+        { "name": "constant.language.null.rob", "match": "\\bnull\\b" },
+        { "name": "variable.language.this.rob", "match": "\\bthis\\b" },
+        { "name": "variable.language.super.rob", "match": "\\bsuper\\b" }
+      ]
+    },
+
+    "keywords-control": {
+      "name": "keyword.control.rob",
+      "match": "\\b(if|else|while|for|in|return|break|continue|match|try|catch|finally|throw)\\b"
+    },
+
+    "storage-modifiers": {
+      "patterns": [
+        {
+          "name": "storage.modifier.rob",
+          "match": "\\b(public|private|open|override|abstract|static|shared|mut|data|async)\\b"
+        },
+        {
+          "name": "keyword.control.flow.await.rob",
+          "match": "\\bawait\\b"
+        }
+      ]
+    },
+
+    "package-import": {
+      "patterns": [
+        { "name": "keyword.other.import.rob", "match": "\\b(package|import)\\b" },
+        { "name": "keyword.other.import.as.rob", "match": "\\bas\\b" }
+      ]
+    },
+
+    "class-definition": {
+      "match": "\\b(class|interface|enum)\\b\\s+([A-Za-z_][A-Za-z0-9_]*)",
+      "captures": {
+        "1": { "name": "storage.type.rob" },
+        "2": { "name": "entity.name.type.rob" }
+      }
+    },
+
+    "function-definition": {
+      "match": "\\b(fun)\\b\\s+([A-Za-z_][A-Za-z0-9_]*)",
+      "captures": {
+        "1": { "name": "storage.type.function.rob" },
+        "2": { "name": "entity.name.function.rob" }
+      }
+    },
+
+    "keywords-other": {
+      "patterns": [
+        { "name": "keyword.other.init.rob", "match": "\\binit\\b" },
+        { "name": "keyword.operator.expression.is.rob", "match": "\\bis\\b" },
+        { "name": "keyword.other.reserved.rob", "match": "\\bval\\b" },
+        { "name": "keyword.other.throws.rob", "match": "\\bthrows\\b" }
+      ]
+    },
+
+    "types": {
+      "name": "support.type.rob",
+      "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+    },
+
+    "function-calls": {
+      "match": "\\b(?!(if|while|for|match|catch)\\b)([a-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+      "captures": {
+        "2": { "name": "entity.name.function.rob" }
+      }
+    },
+
+    "operators": {
+      "name": "keyword.operator.rob",
+      "match": "\\?\\:|\\?\\.|!!|==|!=|<=|>=|&&|\\|\\||\\+=|-=|\\*=|/=|%=|->|\\.\\.|\\?|[+\\-*/%<>=!]"
+    },
+
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.terminator.statement.rob", "match": ";" },
+        { "name": "punctuation.separator.comma.rob", "match": "," },
+        { "name": "punctuation.separator.type.rob", "match": ":" },
+        { "name": "punctuation.accessor.rob", "match": "\\." },
+        { "name": "punctuation.section.block.rob", "match": "[{}]" },
+        { "name": "punctuation.section.parens.rob", "match": "[()]" },
+        { "name": "punctuation.section.brackets.rob", "match": "[\\[\\]]" }
+      ]
+    }
+  }
+}
