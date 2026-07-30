@@ -6,9 +6,7 @@
 /// A half-open byte range `[start, end)` into the source text.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Span {
-    /// Byte offset of the first character.
     pub start: usize,
-    /// Byte offset one past the last character.
     pub end: usize,
 }
 
@@ -22,22 +20,16 @@ impl Span {
 /// A literal constant.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Literal {
-    /// An integer literal.
     Int(i64),
-    /// A floating-point literal.
     Float(f64),
 }
 
 /// A binary operator.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BinOp {
-    /// Addition, `+`.
     Add,
-    /// Subtraction, `-`.
     Sub,
-    /// Multiplication, `*`.
     Mul,
-    /// Division, `/`.
     Div,
 }
 
@@ -56,17 +48,12 @@ impl BinOp {
 /// An expression.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Expr {
-    /// A literal constant.
     Literal(Literal),
-    /// A bare identifier.
     Ident(String),
-    /// A binary operation.
+    /// A binary operation, e.g. `a + b`.
     Binary {
-        /// The operator.
         op: BinOp,
-        /// The left operand.
         left: Box<Expr>,
-        /// The right operand.
         right: Box<Expr>,
     },
 }

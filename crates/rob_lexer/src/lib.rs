@@ -9,35 +9,27 @@ use logos::Logos;
 #[derive(Logos, Debug, Clone, PartialEq)]
 #[logos(skip r"[ \t\r\n]+")]
 pub enum Token {
-    /// An integer literal, e.g. `42` or `1_000`.
     #[regex(r"[0-9][0-9_]*", |lex| lex.slice().replace('_', "").parse::<i64>().ok())]
     Int(i64),
 
-    /// An identifier, e.g. `foo_bar`.
     #[regex(r"[A-Za-z_][A-Za-z0-9_]*", |lex| lex.slice().to_owned())]
     Ident(String),
 
-    /// The `+` operator.
     #[token("+")]
     Plus,
 
-    /// The `-` operator.
     #[token("-")]
     Minus,
 
-    /// The `*` operator.
     #[token("*")]
     Star,
 
-    /// The `/` operator.
     #[token("/")]
     Slash,
 
-    /// A left parenthesis, `(`.
     #[token("(")]
     LParen,
 
-    /// A right parenthesis, `)`.
     #[token(")")]
     RParen,
 }
@@ -45,7 +37,6 @@ pub enum Token {
 /// The byte range of input that could not be tokenized.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LexError {
-    /// The offending byte range.
     pub span: std::ops::Range<usize>,
 }
 
