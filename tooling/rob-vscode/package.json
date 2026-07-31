@@ -1,0 +1,33 @@
+{
+  "name": "rob-lang",
+  "displayName": "Rob Language Support",
+  "description": "Syntax highlighting for the Rob programming language (.rob files)",
+  "version": "0.1.0",
+  "publisher": "roblang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ErwanHeschung/roblang"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "rob",
+        "aliases": ["Rob", "rob"],
+        "extensions": [".rob"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "rob",
+        "scopeName": "source.rob",
+        "path": "./syntaxes/rob.tmLanguage.json"
+      }
+    ]
+  }
+}
